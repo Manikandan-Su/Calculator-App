@@ -1,0 +1,83 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Popper from '@mui/material/Popper';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
+import Paper from '@mui/material/Paper';
+import { format, parseISO } from "date-fns";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { height } from '@mui/system';
+import { ClickAwayListener } from '@mui/material';
+
+export default function PositionedPopper({ anchorEl, open, placement, handleClick, allEvents, setOpen }) {
+    const handleClickAway = (e) => {
+        e.stopPropagation()
+    }
+    return (
+        <Box sx={{ width: 500 }}>
+            <ClickAwayListener onClickAway={handleClickAway}>
+                <Popper
+                    sx={{ zIndex: 1200 }}
+                    open={open}
+                    anchorEl={anchorEl}
+                    placement={placement}
+                    transition
+                >
+                    {({ TransitionProps }) => (
+                        <Fade {...TransitionProps} timeout={350}>
+                            <Paper>
+                                <Paper
+                                    data-bs-toggle="popover"
+                                    data-bs-html="true"
+                                    data-bs-content="<b>Bold text</b> and <i>italic text</i>"
+                                    draggable
+                                >
+                                    <Box style={{ textAlign: 'left' }}>
+                                        {allEvents && allEvents.map((eventRecord) => {
+                                            return <>
+                                                <Grid style={{ display: 'inline-block', width: '350px', paddingLeft: '10px' }}>
+                                                    <Grid container>
+                                                        <Grid item md={10}>
+                                                            <span style={{ fontSize: '12px', fontWeight: '500' }}>{eventRecord?.user_det?.job_id?.jobRequest_Title}</span>
+                                                        </Grid>
+
+                                                        <Grid item md={2} style={{ paddingTop: '5px', paddingRight: '10px', textAlign: 'right' }}>
+                                                            <OpenInNewIcon onClick={() => {
+                                                                window.open(eventRecord?.link, '_blank')
+                                                            }} style={{ height: '18px', width: '18px', cursor: 'pointer' }} />
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid container>
+                                                        <Grid item md={5}>
+                                                            <span style={{ fontSize: '12px' }}>{eventRecord?.summary}</span>
+                                                        </Grid>
+                                                        <Grid item md={6}>
+                                                            <span style={{ fontSize: '12px' }}>Interviewer: {eventRecord?.user_det?.handled_by?.firstName}</span>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    <Grid container>
+                                                        <Grid item md={5}>
+                                                            <span style={{ fontSize: '12px' }}>Date: {format(parseISO(eventRecord?.end), "dd/mm/yyyy")}</span>
+                                                        </Grid>
+                                                        <Grid item md={6}>
+                                                            <span style={{ fontSize: '12px' }}>Time: {format(parseISO(eventRecord?.start), "hh:mm a")} - {format(parseISO(eventRecord?.end), "hh:mm a")}</span>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                                <hr style={{ margin: 0 }} />
+                                            </>
+                                        })}
+                                    </Box>
+                                </Paper>
+                            </Paper>
+                        </Fade>
+                    )}
+                </Popper>
+            </ClickAwayListener>
+        </Box>
+    );
+}
