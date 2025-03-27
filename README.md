@@ -18,4 +18,4 @@ If you are developing a production application, we recommend using TypeScript an
 3) npm install
 4) npm run dev
 
-# Please make sure to stable internet connection for loading google font's & bootstrap CDN
+Please make sure to stable internet connection for loading google font's & bootstrap CDN
