@@ -10,12 +10,26 @@ import { format, parseISO } from "date-fns";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { height } from '@mui/system';
 import { ClickAwayListener } from '@mui/material';
+import AlertDialog from './Dialog';
 
 export default function PositionedPopper({ anchorEl, open, placement, handleClick, allEvents, setOpen }) {
     const handleClickAway = (e) => {
         e.stopPropagation()
     }
+    const [alertOpen, setAlertOpen] = React.useState(false);
+    const [eventsRecord, setEventsRecord] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setAlertOpen(true);
+      };
+    
+      const handleClose = () => {
+        setAlertOpen(false);
+      };
+
+
     return (
+        <>
         <Box sx={{ width: 500 }}>
             <ClickAwayListener onClickAway={handleClickAway}>
                 <Popper
@@ -45,7 +59,10 @@ export default function PositionedPopper({ anchorEl, open, placement, handleClic
 
                                                         <Grid item md={2} style={{ paddingTop: '5px', paddingRight: '10px', textAlign: 'right' }}>
                                                             <OpenInNewIcon onClick={() => {
-                                                                window.open(eventRecord?.link, '_blank')
+                                                                setOpen(false);
+                                                                setAlertOpen(true);
+                                                                setEventsRecord(eventRecord);
+                                                                
                                                             }} style={{ height: '18px', width: '18px', cursor: 'pointer' }} />
                                                         </Grid>
                                                     </Grid>
@@ -61,7 +78,7 @@ export default function PositionedPopper({ anchorEl, open, placement, handleClic
 
                                                     <Grid container>
                                                         <Grid item md={5}>
-                                                            <span style={{ fontSize: '12px' }}>Date: {format(parseISO(eventRecord?.end), "dd/mm/yyyy")}</span>
+                                                            <span style={{ fontSize: '12px' }}>Date: {format(parseISO(eventRecord?.end), "dd/MM/yyy")}</span>
                                                         </Grid>
                                                         <Grid item md={6}>
                                                             <span style={{ fontSize: '12px' }}>Time: {format(parseISO(eventRecord?.start), "hh:mm a")} - {format(parseISO(eventRecord?.end), "hh:mm a")}</span>
@@ -79,5 +96,7 @@ export default function PositionedPopper({ anchorEl, open, placement, handleClic
                 </Popper>
             </ClickAwayListener>
         </Box>
+        <AlertDialog eventsRecord={eventsRecord} open={alertOpen} handleClickOpen={handleClickOpen} handleClose={handleClose}/>
+        </>
     );
 }
