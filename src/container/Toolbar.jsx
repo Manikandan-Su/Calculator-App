@@ -204,7 +204,7 @@ function SchedulerToolbar(props) {
         alignItems="center"
         justifyContent="flex-end"
       >
-        <Grid item xs={1} sm md={4} style={{ paddingTop: '12px' }}>
+        <Grid item xs={12} sm md={4} style={{ paddingTop: '12px' }}>
           {toolbarProps?.showDatePicker &&
             <Typography component="div" sx={{ display: 'flex', paddingLeft: '25px' }}>
               <Hidden smDown>
@@ -226,7 +226,7 @@ function SchedulerToolbar(props) {
             </Typography>}
         </Grid>
 
-        <Grid item xs={1} sm md style={{ textAlign: 'center' }}>
+        <Grid item xs={12} sm md style={{ textAlign: 'center' }}>
           <Button
             size="small"
             id="basic-button"
@@ -247,7 +247,7 @@ function SchedulerToolbar(props) {
           <BasicDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} anchorDateEl={anchorDateEl} handleCloseDateSelector={handleCloseDateSelector} />
         </Grid>
 
-        <Grid item xs sm md sx={{ textAlign: 'right' }}>
+        <Grid item xs={12} sm md sx={{ textAlign: 'right' }}>
           <Stack
             direction="row"
             sx={{
@@ -272,7 +272,7 @@ function SchedulerToolbar(props) {
             </Hidden>
           </Stack>
         </Grid>
-        <Grid item xs={12} sx={{}}>
+        <Grid item xs={12}>
           <Menu
             id="menu-menu"
             open={openMenu}
