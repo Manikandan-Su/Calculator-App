@@ -12,20 +12,25 @@ import { height } from '@mui/system';
 import { ClickAwayListener } from '@mui/material';
 import AlertDialog from './Dialog';
 
-export default function PositionedPopper({ anchorEl, open, placement, handleClick, allEvents, setOpen }) {
-    const handleClickAway = (e) => {
-        e.stopPropagation()
-    }
-    const [alertOpen, setAlertOpen] = React.useState(false);
-    const [eventsRecord, setEventsRecord] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setAlertOpen(true);
-      };
+export default function PositionedPopper({ anchorEl, open, placement, handleClick, allEvents, setOpen, alertOpen, setAlertOpen, eventsRecord, setEventsRecord, handleClickOpen, handleClose }) {
+    console.log('open', open)
     
-      const handleClose = () => {
-        setAlertOpen(false);
-      };
+    const handleClickAway = (e) => {
+        if (anchorEl && anchorEl.contains(event.target)) {
+            return; // Prevent closing when clicking the anchor element
+        }
+        setOpen(false);
+    }
+    // const [alertOpen, setAlertOpen] = React.useState(false);
+    // const [eventsRecord, setEventsRecord] = React.useState(false);
+
+    // const handleClickOpen = () => {
+    //     setAlertOpen(true);
+    //   };
+    
+    //   const handleClose = () => {
+    //     setAlertOpen(false);
+    //   };
 
 
     return (
@@ -51,20 +56,28 @@ export default function PositionedPopper({ anchorEl, open, placement, handleClic
                                     <Box style={{ textAlign: 'left' }}>
                                         {allEvents && allEvents.map((eventRecord) => {
                                             return <>
-                                                <Grid style={{ display: 'inline-block', width: '350px', paddingLeft: '10px' }}>
+                                                <Grid
+                                                    onClick={() => {
+                                                        setOpen(false);
+                                                        setAlertOpen(true);
+                                                        setEventsRecord(eventRecord);
+
+                                                    }}
+                                                    style={{ display: 'inline-block', width: '350px', paddingLeft: '10px', cursor: 'pointer' }}
+                                                >
                                                     <Grid container>
                                                         <Grid item md={10}>
                                                             <span style={{ fontSize: '12px', fontWeight: '500' }}>{eventRecord?.user_det?.job_id?.jobRequest_Title}</span>
                                                         </Grid>
 
-                                                        <Grid item md={2} style={{ paddingTop: '5px', paddingRight: '10px', textAlign: 'right' }}>
+                                                        {/* <Grid item md={2} style={{ paddingTop: '5px', paddingRight: '10px', textAlign: 'right' }}>
                                                             <OpenInNewIcon onClick={() => {
                                                                 setOpen(false);
                                                                 setAlertOpen(true);
                                                                 setEventsRecord(eventRecord);
                                                                 
                                                             }} style={{ height: '18px', width: '18px', cursor: 'pointer' }} />
-                                                        </Grid>
+                                                        </Grid> */}
                                                     </Grid>
 
                                                     <Grid container>

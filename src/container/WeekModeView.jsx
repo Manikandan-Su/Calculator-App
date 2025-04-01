@@ -22,9 +22,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     ['&:nth-of-type(1)']: { borderLeft: `0px !important` }
   },
   [`&.${tableCellClasses.body}`]: {
+    verticalAlign:'top',
     fontSize: 12,
-    height: 16,
-    width: 128,
+    height: 130,
+    width: 150,
     maxWidth: 128,
     cursor: 'pointer',
     borderLeft: `1px solid #ccc`,
@@ -41,7 +42,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   ['&:last-child td, &:last-child th']: {
-    border: 0
+    border: 0,
   }
 }))
 
@@ -188,6 +189,27 @@ function WeekModeView (props) {
 
     console.log('isSameDayOccurs', isSameDayOccurs);
 
+    let eventHeight = 0;
+    if (isSameDayOccurs && Array.isArray(isSameDayOccurs) && isSameDayOccurs.length > 0) {
+      const startTime = parseISO(isSameDayOccurs[0]?.start); // Directly parse the ISO string
+      const endTime = parseISO(isSameDayOccurs[0]?.end);
+
+      const durationInMinutes = differenceInMinutes(endTime, startTime);
+      const minuteHeightFactor = 2.3 // 2px per minute (Adjust as needed)
+      eventHeight = durationInMinutes * minuteHeightFactor;
+      console.log('dayIndex', dayIndex)
+      const element = document.getElementById(`tableCellEvent-${dayIndex}`);
+      console.log("Found element:", element);
+      if (element) {
+        element.style.display = 'flex';
+        element.style.flexDirection = 'column';
+        element.style.setProperty("display", "flex", "important");
+        element.style.setProperty("flex-direction", "column", "important");
+      }
+
+      
+    }
+
     return isSameDayOccurs && Array.isArray(isSameDayOccurs) && isSameDayOccurs.length ?
       <EventItem
         isMonthMode
@@ -201,6 +223,10 @@ function WeekModeView (props) {
         onClick={e => handleTaskClick(e, isSameDayOccurs[0])}
         onDragStart={e => onCellDragStart(e, isSameDayOccurs[0], rowIndex)}
         sx={{
+          
+          position: 'relative',
+          top: '-7px',
+          overflow: 'hidden',
           width: "100%",
           py: 0,
           my: .3,
@@ -209,7 +235,8 @@ function WeekModeView (props) {
           border: '1px solid #dadada',
           borderRadius: '5px',
           boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-          transition: '0.3s'
+          transition: '0.3s',
+          height: `${eventHeight}px`, // Set dynamic height
           // backgroundColor: isSameDayOccurs[0]?.color || theme.palette.primary.light
         }}
       /> : null
@@ -298,7 +325,6 @@ function WeekModeView (props) {
                       align="center"
                       component="th"
                       sx={{px: 1}}
-                      onClick={(event) => handleCellClick(event, row)}
                     >
                       <Typography variant="body2">{row?.label}</Typography>
                       {renderTask(row?.data, row.id)}
@@ -311,18 +337,13 @@ function WeekModeView (props) {
                         scope="row"
                         align="center"
                         component="th"
+                        id={`tableCellEvent-${dayIndex}`}
                         sx={{
                           px: .3, py: .5,
                           //backgroundColor: (
                           //  state?.activeItem?.id === day?.id ? theme.palette.action.hover : 'inherit'
                           //)
                         }}
-                        onDragEnd={onCellDragEnd}
-                        onDragOver={onCellDragOver}
-                        onDragEnter={e => onCellDragEnter(e, row?.label, rowIndex, dayIndex)}
-                        onClick={(event) => handleCellClick(
-                          event, {rowIndex, ...row}, {dayIndex, ...day}
-                        )}
                       >
                         {
                         renderTask(

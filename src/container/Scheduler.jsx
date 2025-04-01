@@ -25,7 +25,7 @@ import DateFnsLocaleContext from '../../locales/dateFnsContext.js'
 import { ar, de, enAU, es, fr, ja, ko, ru, zhCN } from "date-fns/locale"
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCalenderEvent } from '../redux/actions.js'
-
+import set from 'date-fns/set'
 
 /**
  * @name Scheduler
@@ -333,26 +333,26 @@ function Scheduler(props) {
     const HOURS = 24;
     let data = [];
     let dayStartHour = startOfDay(selectedDay);
-
+  
     for (let i = 0; i <= HOURS; i++) {
       let id = `line_${i}`;
       let label = format(dayStartHour, 'hh:mm a'); // Change to 12-hour format
-
+  
       console.log('@@@', label);
-
+  
       if (i > 0) {
-        let obj = { id: id, label: label, days: [] };
-        let columns = getDayHeader();
-        let column = columns[0];
-
-        obj.days.push({
-          id: `column-_m-${column?.month}_d-${column?.day}_${id}`,
-          date: column?.date,
-        });
-
-        data.push(obj);
-        dayStartHour = add(dayStartHour, { minutes: 60 });
-      }
+      let obj = { id: id, label: label, days: [] };
+      let columns = getDayHeader();
+      let column = columns[0];
+  
+      obj.days.push({
+        id: `column-_m-${column?.month}_d-${column?.day}_${id}`,
+        date: column?.date,
+      });
+  
+      data.push(obj);
+      dayStartHour = add(dayStartHour, { minutes: 60 });
+    }
     }
     return data;
   };

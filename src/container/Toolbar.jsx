@@ -191,7 +191,7 @@ function SchedulerToolbar(props) {
   return (
     <Toolbar
       variant="dense"
-      style={{ width: '1150px', background: 'aliceblue' }}
+      style={{ width: '1350px', background: 'aliceblue' }}
       sx={{
         px: '0px !important',
         display: 'block',

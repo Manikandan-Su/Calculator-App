@@ -6,7 +6,7 @@ import { textAlign, width } from "@mui/system";
 import Badge from '@mui/material/Badge';
 import PositionedPopper from "./PopOver";
 
-function DayViewEventItem(props) {
+function  DayViewEventItem(props) {
   const {
     event,
     rowId,

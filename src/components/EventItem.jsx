@@ -5,6 +5,8 @@ import { format, parseISO } from "date-fns";
 import { textAlign, width } from "@mui/system";
 import Badge from '@mui/material/Badge';
 import PositionedPopper from "./PopOver";
+import { ClickAwayListener } from '@mui/material';
+
 
 function EventItem(props) {
   const {
@@ -23,16 +25,40 @@ function EventItem(props) {
   const [open, setOpen] = React.useState(false);
   const [placement, setPlacement] = React.useState();
 
+
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [eventsRecord, setEventsRecord] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setAlertOpen(true);
+  };
+
+  const handleClose = () => {
+    setAlertOpen(false);
+  };
+
   const handleClick = (newPlacement) => (event) => {
+    // event.stopPropagation();
     setAnchorEl(event.currentTarget);
-    console.log('open')
     setOpen((prev) => !prev);
+    console.log('comes')
     setPlacement(newPlacement);
   };
 
+  const handleEventClick = () => {
+    console.log('Open',allEvents )
+    if(allEvents && allEvents.length > 1){
+      handleClick('right');
+    } else {
+      setEventsRecord(allEvents[0]);
+      setAlertOpen(true);
+    }
+  }
+
+
   return (
     <>
-      <Badge invisible={eventsCount <= 1} style={!eventsCount ? { display: 'none' } : { color: 'black' }} badgeContent={eventsCount && eventsCount > 1 && eventsCount || false} color="warning" onClick={handleClick('right')}>
+      <Badge invisible={eventsCount <= 1} style={!eventsCount ? { display: 'none' } : { color: 'black' }} badgeContent={eventsCount && eventsCount > 1 && eventsCount || false} color="warning" onClick={allEvents && allEvents.length > 1 ? handleClick('right') : handleEventClick}>
         <Paper
           data-bs-toggle="popover"
           data-bs-html="true"
@@ -52,19 +78,25 @@ function EventItem(props) {
               <span style={{ color: 'grey' }}>Time:</span> {format(parseISO(event?.start), "hh:mm a")} - {format(parseISO(event?.end), "hh:mm a")}
             </Typography>
 
-            <Typography variant="body2" sx={{ fontSize: 10, fontFamily: 'Poppins', paddingTop: '5px' }}>
+            <Typography variant="body2" sx={{ fontSize: 10, fontFamily: 'Poppins' }}>
               <span style={{ color: 'grey' }}>Interviewer:</span> {event?.user_det?.handled_by?.firstName + ' ' + event?.user_det?.handled_by?.lastName || ''}
             </Typography>
           </Box>
         </Paper>
       </Badge>
-      <PositionedPopper
-        allEvents={allEvents}
-        anchorEl={anchorEl}
-        open={open}
-        setOpen={setOpen}
-        placement={placement}
-      />
+        <PositionedPopper
+          allEvents={allEvents}
+          anchorEl={anchorEl}
+          open={open}
+          setOpen={setOpen}
+          placement={placement}
+          alertOpen={alertOpen}
+          setAlertOpen={setAlertOpen}
+          eventsRecord={eventsRecord}
+          setEventsRecord={setEventsRecord}
+          handleClickOpen={handleClickOpen}
+          handleClose={handleClose}
+        />      
     </>
   )
 }

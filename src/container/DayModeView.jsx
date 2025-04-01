@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
-import { styled, width } from "@mui/system"
+import { display, styled, width } from "@mui/system"
 import { useTheme } from '@mui/material/styles'
 import {
   Paper, Typography, Table, TableBody, TableCell, TableContainer,
@@ -9,6 +9,7 @@ import {
 import { format, parse, add, differenceInMinutes, isValid } from 'date-fns'
 import DateFnsLocaleContext from "../../locales/dateFnsContext.js";
 import DayViewEventItem from '../components/DayViewItem.jsx'
+import EventItem from '../components/EventItem.jsx'
 import { getDay, parseISO, isSameDay, isSameHour } from 'date-fns'
 
 
@@ -24,8 +25,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     }
   },
   [`&.${tableCellClasses.body}`]: {
+    verticalAlign: 'top',
     fontSize: 12,
-    height: 16,
+    height: 108,
     width: 128,
     maxWidth: 128,
     cursor: 'pointer',
@@ -107,8 +109,28 @@ function DayModeView(props) {
       return isSameDay(rowIndex.date, parseISO(eventData.start)) && isSameHour(givenDate, noonTime)
     }
     );
+
+    let eventHeight = 0;
+    if (isSameDayOccurs && Array.isArray(isSameDayOccurs) && isSameDayOccurs.length > 0) {
+      const startTime = parseISO(isSameDayOccurs[0]?.start); // Directly parse the ISO string
+      const endTime = parseISO(isSameDayOccurs[0]?.end);
+
+      const durationInMinutes = differenceInMinutes(endTime, startTime);
+      const minuteHeightFactor = 2 // 2px per minute (Adjust as needed)
+      eventHeight = durationInMinutes * minuteHeightFactor;
+      console.log('dayIndex', rowIndex)
+      const element = document.getElementById(`tableCellEvent-${rowIndex}`);
+      console.log("Found element:", element);
+      if (element) {
+        element.style.display = 'flex';
+        element.style.flexDirection = 'column';
+        element.style.setProperty("display", "flex", "important");
+        element.style.setProperty("flex-direction", "column", "important");
+      }
+    }
+
     return isSameDayOccurs && Array.isArray(isSameDayOccurs) && isSameDayOccurs.length ?
-      <DayViewEventItem
+      <EventItem
         draggable
         event={isSameDayOccurs[0]}
         elevation={0}
@@ -116,7 +138,10 @@ function DayModeView(props) {
         eventsCount={isSameDayOccurs.length}
         allEvents={isSameDayOccurs}
         sx={{
-          width: '450px',
+          position: 'relative',
+          top: '-7px',
+          width: '300px',
+          overflow: 'hidden',
           py: 0,
           my: .3,
           // color: "#fff",
@@ -124,7 +149,8 @@ function DayModeView(props) {
           border: '1px solid #dadada',
           borderRadius: '5px',
           boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-          transition: '0.3s'
+          transition: '0.3s',
+          height: `${eventHeight}px`, // Set dynamic height
         }}
       /> : null
   }
@@ -171,7 +197,6 @@ function DayModeView(props) {
                     <StyledTableCell
                       scope="row" align="center"
                       component="th" sx={{ px: 1 }}
-                      onClick={(event) => handleCellClick(event, row)}
                     >
                       <Typography variant="body2">{row?.label}</Typography>
                       {/* {row?.data?.length > 0 && renderTask(row?.data, row.id)} */}
@@ -186,9 +211,6 @@ function DayModeView(props) {
                         component="th"
                         colSpan={2}
                         sx={{ px: .3, py: .5 }}
-                        onClick={(event) => handleCellClick(
-                          event, { rowIndex, ...row }, { dayIndex, ...day }
-                        )}
                       >
                         {(renderTask(day?.data, row?.id, day, row?.label))}
                       </StyledTableCell>
