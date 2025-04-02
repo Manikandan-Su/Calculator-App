@@ -11,6 +11,7 @@ import { Typography } from '@mui/material';
 import { format, parseISO } from "date-fns";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DownloadIcon from '@mui/icons-material/Download';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function AlertDialog({ open, handleClickOpen, handleClose, eventsRecord }) {
     return (
@@ -24,7 +25,12 @@ export default function AlertDialog({ open, handleClickOpen, handleClose, events
             >
                 {eventsRecord && <DialogContent>
                     <Grid container>
-                        <Grid item md={6} xs={12} style={{ border: '1px solid #80808040' }}>
+                    <Grid onClick={handleClose} style={{width: '100%', textAlign: 'right', cursor: 'pointer'}} id='closeModal' item md={12}>
+                            <CloseIcon style={{color: 'grey'}}/>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item md={6} xs={12} style={{ border: '1px solid #80808040', padding: '5px' }}>
                             <Typography style={{ fontFamily: 'Poppins', fontSize: '14px', padding: '5px' }}>Interview with: {eventsRecord?.user_det?.candidate?.candidate_firstName + ' ' + eventsRecord?.user_det?.candidate?.candidate_lastName} </Typography>
                             <Typography style={{ fontFamily: 'Poppins', fontSize: '14px', padding: '5px' }}>Position: {eventsRecord?.user_det?.job_id?.jobRequest_Title}</Typography>
                             <Typography style={{ fontFamily: 'Poppins', fontSize: '14px', padding: '5px' }}>Created By: {eventsRecord?.user_det?.handled_by?.firstName}</Typography>
