@@ -98,7 +98,7 @@ export default function PositionedPopper({ anchorEl, open, placement, handleClic
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
-                                                <hr style={{ margin: 0 }} />
+                                                <hr style={{ margin: 0, color: 'rgb(11, 101, 195)' }} />
                                             </>
                                         })}
                                     </Box>
